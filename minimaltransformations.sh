@@ -5,7 +5,7 @@ ls path/to/t1w*_stdorient.nii.gz | parallel --plus antspynet_bet.sh {} t1 {..}_m
 # bias field correction
 ls path/to/t1w*stdorient.nii.gz | parallel --plus N4BiasFieldCorrection -d 3 -i {} -x {..}_mask.nii.gz -r -o {..}_bfc.nii.gz
 # applying the mask
-ls path/to/t1w*stdorient.nii.gz | parallel --plus {..}_bfc.nii.gz -mas {..}_mask.nii.gz {..}_bfc_masked.nii.gz
+ls path/to/t1w*stdorient.nii.gz | parallel --plus fslmaths {..}_bfc.nii.gz -mas {..}_mask.nii.gz {..}_bfc_masked.nii.gz
 # linear registration to MNI
 ls path/to/t1w*_bfc_masked.nii.gz | parallel --plus flirt -in {} -ref $FSLDIR/data/standard/MNI152_T1_2mm_brain.nii.gz -cost normmi -omat {..}_flirt.mat -out {..}_intemplate.nii.gz
 # dilating the MNI brain mask
