@@ -2,6 +2,9 @@
 ls path/to/t1w*.nii.gz | parallel --plus fslreorient2std {} {..}_stdorient.nii.gz
 # antspynet based brain masking
 ls path/to/t1w*_stdorient.nii.gz | parallel --plus antspynet_bet.sh {} t1 {..}_mask.nii.gz
+# one can try different brain masking algorithms for example once can try the following abe (ants brain exraction)
+ImageMath 3 $FSLDIR/data/standard/MNI152_T1_1mm_normalized.nii.gz Normalize $FSLDIR/data/standard/MNI152_T1_1mm.nii.gz
+ls path/to/t1*_stdorient.nii.gz | parallel --plus antsBrainExtraction.sh -d 3 -a {} -e $FSLDIR/data/standard/MNI152_T1_1mm_normalized.nii.gz -m $FSLDIR/data/standard/MNI152_T1_1mm_brain_mask.nii.gz -o {..}_abe_mask.nii.gz -k 1 -c 3x1x2x3
 # bias field correction
 ls path/to/t1w*stdorient.nii.gz | parallel --plus N4BiasFieldCorrection -d 3 -i {} -x {..}_mask.nii.gz -r -o {..}_bfc.nii.gz
 # applying the mask
